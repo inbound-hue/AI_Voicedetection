@@ -1,0 +1,13 @@
+.venv/
+.venv.zip/
+__pycache__/
+*.pyc
+*.mp4
+*.m4a
+*.ogg
+downloads/
+downloads_from_gmail/
+transcripts/
+transcripts_from_gmail/
+token_*.pickle
+desktop.ini
