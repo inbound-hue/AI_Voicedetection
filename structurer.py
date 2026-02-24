@@ -52,7 +52,6 @@ def extract_structured_data(transcript: str) -> dict:
     for k in schema:
         data.setdefault(k, "")
 
-    # normalize expat
     if str(data["expat"]).lower() in ["yes", "ja", "true", "1"]:
         data["expat"] = "true"
     else:
