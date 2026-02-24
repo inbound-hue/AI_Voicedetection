@@ -1,45 +1,59 @@
 from flask import Flask, render_template, request, redirect, url_for
-from threading import Thread
 import os
+from transcriber import transcribe_file
+from structurer import extract_structured_data
+from hubspot_writer import save_transcript_to_hubspot
+from email_writer import send_email
 
-# Import functions from email_reciever.py
-from email_reciever import process_emails
+app = Flask(__name__)
 
-# Flask app setup
-app = Flask(__name__)   # Flask automatically looks for "templates" folder
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
 @app.route("/", methods=["GET", "POST"])
 def home():
     if request.method == "POST":
-        target_email = request.form["email"].strip().lower()
+        email = request.form["email"].lower()
+        audio_file = request.files["audio"]
 
-        print(f"Received email: {target_email}")
+        print(f"Received email: {email}")
 
-        # Run email processing in background
-        start_email_processing(target_email)
+        if audio_file:
+            file_path = os.path.join(UPLOAD_FOLDER, audio_file.filename)
+            audio_file.save(file_path)
 
-        return redirect(url_for("success"))
+            print(f"Saved audio file: {file_path}")
+
+            # 1️⃣ Transcribe
+            transcript = transcribe_file(file_path)
+            print("Transcription completed")
+
+            # 2️⃣ Extract structured data
+            structured_data = extract_structured_data(transcript)
+            print("Structured data extracted")
+
+            # 3️⃣ Update HubSpot
+            save_transcript_to_hubspot(email, transcript, file_path, structured_data)
+            print("HubSpot updated")
+
+            # 4️⃣ Send confirmation email
+            send_email(email, structured_data.get("appointment_date"))
+            print("Confirmation email sent")
+
+            return redirect(url_for("success"))
 
     return render_template("index.html")
 
 
 @app.route("/success")
 def success():
-    return "Email processing started successfully!"
-
-
-def start_email_processing(target_email):
-    print(f"Starting background processing for: {target_email}")
-    thread = Thread(target=process_emails, args=(target_email,))
-    thread.daemon = True
-    thread.start()
+    return "Audio processed successfully!"
 
 
 if __name__ == "__main__":
-    # Cloud Run uses PORT environment variable
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host="0.0.0.0", port=port)
+    app.run(debug=True)
+
 
 
 
