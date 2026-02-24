@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email CRM Automation</title>
+    <title>AI CRM Automation</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -36,7 +36,8 @@
             font-size: 18px;
             font-weight: bold;
         }
-        input[type="email"] {
+        input[type="email"],
+        input[type="file"] {
             padding: 15px;
             font-size: 16px;
             border: 2px solid #ddd;
@@ -83,14 +84,19 @@
     </div>
 
     <!-- Main Content Section -->
-    <h1>Email CRM Automation</h1>
-    <p>Enter the email address you want to process:</p>
+    <h1>AI CRM Automation</h1>
+    <p>Enter customer email and upload conversation audio:</p>
 
-    <!-- Form for email input -->
-    <form action="/" method="POST" class="form-container">
+    <!-- Form -->
+    <form action="/" method="POST" enctype="multipart/form-data" class="form-container">
+
         <label for="email">Email Address:</label>
-        <input type="email" id="email" name="email" required placeholder="Enter email address">
-        <input type="submit" value="Submit">
+        <input type="email" id="email" name="email" required placeholder="Enter customer email">
+
+        <label for="audio">Upload Audio File:</label>
+        <input type="file" id="audio" name="audio" accept=".mp3,.wav,.m4a,.mp4" required>
+
+        <input type="submit" value="Process Audio">
     </form>
 </div>
 
@@ -100,4 +106,3 @@
 
 </body>
 </html>
-
