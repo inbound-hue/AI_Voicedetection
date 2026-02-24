@@ -32,7 +32,7 @@ COPY templates /app/templates
 EXPOSE 8080
 
 # Use Gunicorn to run the app
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "main:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "app:app"]
 
 
 
