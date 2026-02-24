@@ -5,7 +5,7 @@ import whisper
 
 _MODEL = None
 
-def get_model(size: str = "base"):
+def get_model(size: str = "tiny"):
     global _MODEL
     if _MODEL is None:
         print(f"Loading Whisper model: {size} ...")
